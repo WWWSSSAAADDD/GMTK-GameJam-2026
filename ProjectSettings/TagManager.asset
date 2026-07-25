@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - NarrowBeam
+  - SwingableLedge
   layers:
   - Default
   - TransparentFX
@@ -13,11 +15,11 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Obstacles
+  - Ledge
+  - Player
+  - FootTrigger
+  - Hotspot
   - 
   - 
   - 
