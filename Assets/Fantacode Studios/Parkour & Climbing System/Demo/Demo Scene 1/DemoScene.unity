@@ -503,7 +503,7 @@ GameObject:
   - component: {fileID: 151880501}
   - component: {fileID: 151880499}
   - component: {fileID: 151880502}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Trap 3 - Directional Wall Trap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -527,6 +527,7 @@ Transform:
   - {fileID: 356894851}
   - {fileID: 1447029871}
   - {fileID: 2019571837}
+  - {fileID: 1045212423}
   m_Father: {fileID: 1817087864}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &151880499
@@ -580,6 +581,8 @@ MonoBehaviour:
   rightWall: {fileID: 356894850}
   backWall: {fileID: 1447029870}
   leftWall: {fileID: 2019571836}
+  floorPlatform: {fileID: 1045212419}
+  resetDelay: 2
   forwardMovementDirection: {x: 1, y: 0, z: 0}
   rightMovementDirection: {x: 0, y: 0, z: -1}
   backMovementDirection: {x: -1, y: 0, z: 0}
@@ -984,7 +987,7 @@ GameObject:
   - component: {fileID: 301143580}
   - component: {fileID: 301143579}
   - component: {fileID: 301143578}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Trap 3 - Forward Block Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1411,7 +1414,7 @@ GameObject:
   - component: {fileID: 356894854}
   - component: {fileID: 356894853}
   - component: {fileID: 356894852}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Trap 3 - Right Block Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1504,18 +1507,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 356894850}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!134 &376030495
-PhysicMaterial:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: ' (Instance) (Instance)'
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0
-  frictionCombine: 0
-  bounceCombine: 0
 --- !u!1 &444787841
 GameObject:
   m_ObjectHideFlags: 0
@@ -1699,7 +1690,7 @@ GameObject:
   - component: {fileID: 467064075}
   - component: {fileID: 467064074}
   - component: {fileID: 467064073}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Trap 2 - Meme Pusher Trap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3141,7 +3132,7 @@ MonoBehaviour:
   overrideType: 0
   groundLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 8193
   soundIgnoreStates: 050000000400000006000000
   particleIgnoreStates: 040000000500000006000000
   adjustVolumeBasedOnSpeed: 1
@@ -3153,7 +3144,7 @@ CharacterController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 767059674}
-  m_Material: {fileID: 376030495}
+  m_Material: {fileID: 1637468339}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -3264,7 +3255,7 @@ MonoBehaviour:
   groundCheckOffset: {x: 0, y: 0.15, z: 0.07}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 8193
 --- !u!114 &767059689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3848,8 +3839,8 @@ GameObject:
   - component: {fileID: 1045212422}
   - component: {fileID: 1045212421}
   - component: {fileID: 1045212420}
-  m_Layer: 0
-  m_Name: Platform2
+  m_Layer: 13
+  m_Name: Trap 3 - Drop Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3935,11 +3926,11 @@ Transform:
   m_GameObject: {fileID: 1045212419}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 60, y: -0.5, z: -30}
+  m_LocalPosition: {x: -4, y: -1.5, z: 0}
   m_LocalScale: {x: 16, y: 1, z: 8.4522}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1817087864}
+  m_Father: {fileID: 151880498}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1052292300
 GameObject:
@@ -4269,7 +4260,7 @@ GameObject:
   - component: {fileID: 1151897331}
   - component: {fileID: 1151897330}
   - component: {fileID: 1151897329}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Trap 1 - Moving Platform Trap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4737,7 +4728,7 @@ GameObject:
   - component: {fileID: 1317724038}
   - component: {fileID: 1317724037}
   - component: {fileID: 1317724036}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: BIG MEME - Whitebox Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5299,7 +5290,7 @@ GameObject:
   - component: {fileID: 1447029874}
   - component: {fileID: 1447029873}
   - component: {fileID: 1447029872}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Trap 3 - Back Block Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5884,6 +5875,18 @@ Transform:
   - {fileID: 264898938}
   m_Father: {fileID: 614806647}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!134 &1637468339
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ' (Instance) (Instance) (Instance)'
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1 &1644153672
 GameObject:
   m_ObjectHideFlags: 0
@@ -6322,7 +6325,6 @@ Transform:
   - {fileID: 151880498}
   - {fileID: 467064069}
   - {fileID: 1671974165}
-  - {fileID: 1045212423}
   - {fileID: 1363170036}
   - {fileID: 1151897325}
   - {fileID: 2066324236}
@@ -6719,7 +6721,7 @@ GameObject:
   - component: {fileID: 2019571840}
   - component: {fileID: 2019571839}
   - component: {fileID: 2019571838}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Trap 3 - Left Block Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}

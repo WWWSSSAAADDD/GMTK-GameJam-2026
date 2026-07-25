@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using FS_ThirdPerson;
 
@@ -11,6 +12,12 @@ namespace CountdownTraps
         [SerializeField] private GameObject rightWall;
         [SerializeField] private GameObject backWall;
         [SerializeField] private GameObject leftWall;
+
+        [Header("Floor")]
+        [SerializeField] private GameObject floorPlatform;
+
+        [Header("Reset")]
+        [SerializeField, Min(0f)] private float resetDelay = 2f;
 
         [Header("Input Detection")]
         [Tooltip("World-space direction that activates the forward wall.")]
@@ -31,6 +38,8 @@ namespace CountdownTraps
         private bool rightWallShown;
         private bool backWallShown;
         private bool leftWallShown;
+        private bool floorDropped;
+        private Coroutine resetRoutine;
 
         private void Awake()
         {
@@ -39,10 +48,7 @@ namespace CountdownTraps
                 return;
             }
 
-            SetActive(forwardWall, false);
-            SetActive(rightWall, false);
-            SetActive(backWall, false);
-            SetActive(leftWall, false);
+            ResetTrap();
         }
 
         private void Reset()
@@ -52,7 +58,7 @@ namespace CountdownTraps
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!TryGetPlayerTransform(other, out Transform player))
+            if (floorDropped || !TryGetPlayerTransform(other, out Transform player))
             {
                 return;
             }
@@ -69,13 +75,17 @@ namespace CountdownTraps
                 playerInside = false;
                 playerTransform = null;
                 locomotionInput = null;
+
+                if (floorDropped)
+                {
+                    resetRoutine = StartCoroutine(ResetAfterDelay());
+                }
             }
         }
 
         private void Update()
         {
-            if (!playerInside || playerTransform == null ||
-                (forwardWallShown && rightWallShown && backWallShown && leftWallShown))
+            if (!playerInside || playerTransform == null || floorDropped)
             {
                 return;
             }
@@ -132,6 +142,44 @@ namespace CountdownTraps
                 leftWallShown = true;
                 SetActive(leftWall, true);
             }
+
+            if (forwardWallShown && rightWallShown && backWallShown && leftWallShown)
+            {
+                DropFloor();
+            }
+        }
+
+        private void DropFloor()
+        {
+            floorDropped = true;
+            SetActive(floorPlatform, false);
+        }
+
+        private IEnumerator ResetAfterDelay()
+        {
+            yield return new WaitForSeconds(resetDelay);
+            resetRoutine = null;
+            ResetTrap();
+        }
+
+        private void ResetTrap()
+        {
+            if (resetRoutine != null)
+            {
+                StopCoroutine(resetRoutine);
+                resetRoutine = null;
+            }
+
+            floorDropped = false;
+            forwardWallShown = false;
+            rightWallShown = false;
+            backWallShown = false;
+            leftWallShown = false;
+            SetActive(floorPlatform, true);
+            SetActive(forwardWall, false);
+            SetActive(rightWall, false);
+            SetActive(backWall, false);
+            SetActive(leftWall, false);
         }
 
         private static bool TryGetPlayerTransform(Component other, out Transform player)

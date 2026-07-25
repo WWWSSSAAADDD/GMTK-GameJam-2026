@@ -5,10 +5,13 @@
 
 ## 通用
 
-1. 每个 Trap 根物体包含自身机关与检测范围；静态平台是场景中的同级物体。
+1. 每个 Trap 根物体包含机关与检测范围；Trap 3 的底板和四面墙都是其子物体。
 2. 在 Inspector 选中 Trap 根物体后调节对应脚本的字段。
 3. 所有 Trap 在一次 Play 中只触发一次；停止再开始 Play 即可重置。
 4. 调整检测范围后，确认红框覆盖玩家正常会走到的位置，同时保留可躲避的边缘。
+5. 机关 Collider 使用 `Trap` Layer，并应用到所有子物体；攀爬扫描不包含此 Layer，但物理碰撞仍有效。
+6. Trigger Collider 只检测不阻挡；平台、Meme 与墙使用非 Trigger Collider 来承重、推人或挡路。
+7. Player 的 `LocomotionController` 与 `FootStepEffects` Ground Layer 必须包含 `Default | Trap`，不要把 `Trap` 加入攀爬扫描。
 
 ## Trap 1 - Moving Platform Trap
 
@@ -34,16 +37,18 @@
 
 ## Trap 3 - Directional Wall Trap
 
-根物体：`Trap 3 - Directional Wall Trap`（检测范围与四面墙都在同一 Trap 中）。
+根物体：`Trap 3 - Directional Wall Trap`（检测范围、四面墙和底板都在同一 Trap 中）。
 
 1. 根物体的 `Box Collider` 就是检测范围；用其 `Center` 与 `Size` 调整红框。
 2. `Forward/Right/Back/Left Wall` 分别引用四面墙；墙体为根物体的子物体。
-3. 角色在红框内输入某方向时，对应方向的墙立即出现；每面墙只出现一次。
-4. `Input Threshold`：输入灵敏度，越低越容易触发；测试场景当前为 `0.05`。
-5. `Direction Dot Threshold`：方向判定精度，越高越接近正方向才触发；当前为 `0.7`。
-6. 四个 `Movement Direction`：设置各墙对应的世界方向；当前前/右/后/左为 `+X/-Z/-X/+Z`。
-7. 调整墙体位置和缩放时，让它们贴住红框四周，避免覆盖检测范围内部。
-8. 编辑器中四面墙默认显示；进入 Play 后隐藏，检测到对应输入时出现。
+3. `Floor Platform` 引用 `Trap 3 - Drop Floor`；底板必须是根物体的子物体且使用非 Trigger Collider。
+4. 角色在红框内输入某方向时，对应方向的墙立即出现；四面墙都出现后，底板会消失。
+5. 角色掉落并离开红框后，等待 `Reset Delay` 再恢复底板、隐藏四面墙并允许再次触发；当前为 `2` 秒。
+6. `Input Threshold`：输入灵敏度，越低越容易触发；测试场景当前为 `0.05`。
+7. `Direction Dot Threshold`：方向判定精度，越高越要求输入方向准确；当前为 `0.7`。
+8. 四个 `Movement Direction`：设置各墙对应的世界方向；当前前/右/后/左为 `+X/-Z/-X/+Z`。
+9. 调整墙体位置和缩放时，让它们贴住红框四周，避免覆盖检测范围内部。
+10. 编辑器中四面墙和底板默认显示；进入 Play 后四面墙隐藏，底板保留。
 
 ## 测试
 
