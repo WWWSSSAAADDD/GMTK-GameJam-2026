@@ -1,0 +1,50 @@
+# Countdown Trap 调节速查
+
+测试白模位置：`DemoScene/Countdown Trap Test Arena`。
+红色检测范围由 `TrapDetectionZoneGizmo` 绘制；在 Scene 视图右上角开启 Gizmos 即可查看。
+
+## 通用
+
+1. 每个 Trap 根物体包含自身机关与检测范围；静态平台是场景中的同级物体。
+2. 在 Inspector 选中 Trap 根物体后调节对应脚本的字段。
+3. 所有 Trap 在一次 Play 中只触发一次；停止再开始 Play 即可重置。
+4. 调整检测范围后，确认红框覆盖玩家正常会走到的位置，同时保留可躲避的边缘。
+
+## Trap 1 - Moving Platform Trap
+
+根物体：`Trap 1 - Moving Platform Trap`（移动平台与检测范围在同一物体）。
+
+1. `Move Offset`：平台触发后移动的世界坐标位移；改方向或距离。
+2. `Move Duration`：完成移动的秒数；数值越小，平台移开得越突然。
+3. `Detection Center`：检测框相对平台中心的偏移。
+4. `Detection Size`：检测框长宽高；红框会实时同步。
+5. `Trap 1 - Moving Platform Start` 只是静态承重白模，不挂陷阱脚本。
+
+## Trap 2 - Meme Pusher Trap
+
+根物体：`Trap 2 - Meme Pusher Trap`（检测范围与大 Meme 在同一 Trap 中）。
+
+1. `Meme`：大 Meme 根物体引用；替换模型后，将新模型根物体拖入此字段。
+2. 旋转 Meme 的 Transform 即可改变推进方向；它始终沿自身 `Forward` 移动。
+3. `Meme Move Speed`：大 Meme 的移动速度。
+4. `Meme Travel Distance`：大 Meme 的总移动距离。
+5. 新 Meme 需带一个或多个非 Trigger Collider，接触到角色时才会将角色推走。
+6. 编辑器中 Meme 默认显示；进入 Play 后隐藏，角色进入检测范围时出现。
+7. `Trap 2 - Static Platform` 是场景静态平台，不属于 Trap 2 根物体。
+
+## Trap 3 - Directional Wall Trap
+
+根物体：`Trap 3 - Directional Wall Trap`（检测范围与四面墙都在同一 Trap 中）。
+
+1. 根物体的 `Box Collider` 就是检测范围；用其 `Center` 与 `Size` 调整红框。
+2. `Forward/Right/Back/Left Wall` 分别引用四面墙；墙体为根物体的子物体。
+3. 角色在红框内输入某方向时，对应方向的墙立即出现；每面墙只出现一次。
+4. `Input Threshold`：输入灵敏度，越低越容易触发；测试场景当前为 `0.05`。
+5. `Direction Dot Threshold`：方向判定精度，越高越接近正方向才触发；当前为 `0.7`。
+6. 四个 `Movement Direction`：设置各墙对应的世界方向；当前前/右/后/左为 `+X/-Z/-X/+Z`。
+7. 调整墙体位置和缩放时，让它们贴住红框四周，避免覆盖检测范围内部。
+8. 编辑器中四面墙默认显示；进入 Play 后隐藏，检测到对应输入时出现。
+
+## 测试
+
+进入 Play 后按正常路线走入红框，确认陷阱能触发且玩家可从检测范围边缘绕开。
