@@ -16,6 +16,9 @@ namespace FS_ParkourSystem
         [Tooltip("Name of the animation to play for performing the parkour action")]
         [SerializeField] public string animName;
 
+        [Tooltip("Automatically perform this action while the player moves forward into a valid obstacle. Keep this enabled only for small step-up actions.")]
+        [SerializeField] bool autoTriggerOnForwardInput;
+
         [Tooltip("Minimum height of the obstacle on which this parkour action can be performed")]
         [SerializeField] float minHeight;
         [Tooltip("Maximum height of the obstacle on which this parkour action can be performed")]
@@ -115,6 +118,7 @@ namespace FS_ParkourSystem
                 animName = value;
             }
         }
+        public bool AutoTriggerOnForwardInput => autoTriggerOnForwardInput;
         public bool RotateToObstacle => rotateToObstacle;
         public bool UseHands => useHands;
         public float PostActionDelay => postActionDelay;

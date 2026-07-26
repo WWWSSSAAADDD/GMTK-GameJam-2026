@@ -15,6 +15,12 @@ namespace FS_ParkourSystem
 
         [SerializeField] bool pressInputToClimb = false;
 
+        [Tooltip("While hanging, moving backward triggers Predictive Back Jump without requiring the Jump From Hang key.")]
+        [SerializeField] bool predictiveBackJumpOnBackwardInput = true;
+
+        [Tooltip("Minimum backward movement input required to trigger Predictive Back Jump.")]
+        [SerializeField, Range(0.1f, 1f)] float predictiveBackJumpBackwardThreshold = 0.6f;
+
         [Tooltip("Offset between the hand and the climbpoint while bracedhanging. Adjust this value and make sure that the hand is correctly placed on the climbing ledge .")]
         public Vector3 handOffsets = new Vector3(0f, -0.08f, 0.05f);
         //[Tooltip("Offset of the player while freehanging. Some character may need y offsets when freeHanging.")]
@@ -352,11 +358,14 @@ namespace FS_ParkourSystem
 
                 animator.SetFloat(AnimatorParameters.BackJumpDir, Mathf.Clamp(value, -1, 1), 0.2f, Time.deltaTime * 2);
                 //}
-                if (inputManager.JumpFromHang || (inputManager.Jump && moveDir == Vector3.zero))
+                var hasBackwardInput = predictiveBackJumpOnBackwardInput &&
+                    moveInput.y <= -predictiveBackJumpBackwardThreshold;
+                if (hasBackwardInput || inputManager.JumpFromHang || (inputManager.Jump && moveDir == Vector3.zero))
                 {
                     if (moveDir != Vector3.zero || (inputManager.Jump && moveDir == Vector3.zero))
                     {
-                        var checkDir = moveDir == Vector3.zero ? dir : moveDir;
+                        var checkDir = hasBackwardInput ? -transform.forward :
+                            (moveDir == Vector3.zero ? dir : moveDir);
 
                         checkDir.y = 0;
 
