@@ -18,6 +18,9 @@ namespace CountdownTraps
         [SerializeField] private bool triggerOnce = true;
         [SerializeField, Min(0f)] private float repeatResetDelay = 2f;
 
+        [Header("Audio")]
+        [SerializeField] private TrapTriggerAudio triggerAudio = new TrapTriggerAudio();
+
         private bool triggered;
         private bool playerInside;
         private bool floorRemoved;
@@ -51,6 +54,7 @@ namespace CountdownTraps
 
             triggered = true;
             SetCageActive(true);
+            triggerAudio.Play(GetComponent<AudioSource>());
             StartCoroutine(RemoveFloor());
         }
 

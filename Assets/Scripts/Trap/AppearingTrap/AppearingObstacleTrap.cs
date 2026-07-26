@@ -14,6 +14,9 @@ namespace CountdownTraps
         [SerializeField] private bool triggerOnce = true;
         [SerializeField, Min(0f)] private float repeatResetDelay = 2f;
 
+        [Header("Audio")]
+        [SerializeField] private TrapTriggerAudio triggerAudio = new TrapTriggerAudio();
+
         [Header("Detection Zone")]
         [SerializeField] private BoxCollider detectionZone;
         [SerializeField] private Vector3 detectionCenter;
@@ -91,6 +94,7 @@ namespace CountdownTraps
                 appearingObstacle.SetActive(true);
             }
 
+            triggerAudio.Play(GetComponent<AudioSource>());
             obstacleShown = true;
         }
 
