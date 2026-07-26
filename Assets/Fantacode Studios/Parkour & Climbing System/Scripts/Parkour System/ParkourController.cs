@@ -51,6 +51,12 @@ namespace FS_ParkourSystem
         [Tooltip("List of Parkour Actions the player can perform while standing close to the obstacle")]
         public List<ParkourAction> parkourActions = new List<ParkourAction>();
 
+        [Tooltip("Automatically performs parkour actions marked Auto Trigger On Forward Input when the player walks forward into them.")]
+        public bool enableAutoStepUp = true;
+
+        [Tooltip("Minimum alignment between the player's movement and forward direction required to auto step up.")]
+        [SerializeField, Range(0f, 1f)] float autoStepForwardInputThreshold = 0.5f;
+
         [HideInInspector] public List<PredictiveAction> predictiveActions = new List<PredictiveAction>();
 
 
@@ -132,6 +138,13 @@ namespace FS_ParkourSystem
                 return;
             }
 
+            // Small steps can be configured to run from forward movement without consuming the jump input.
+            if (enableAutoStepUp && player.IsGrounded && !InAction && !inputManager.Jump && HasForwardMovementInput())
+            {
+                var hitData = environmentScanner.ObstacleCheck();
+                HandleAutomaticParkourAction(hitData);
+            }
+
             // Pefrom Parkour Actions or Predictive Jump/Climb
             if (inputManager.Jump && player.IsGrounded)
             {
@@ -190,6 +203,35 @@ namespace FS_ParkourSystem
                     StartCoroutine(DoParkourAction(selectedActions[UnityEngine.Random.Range(0, selectedActions.Count)]));
                     return;
                 }
+            }
+        }
+
+        bool HasForwardMovementInput()
+        {
+            var moveDirection = player.MoveDir;
+            moveDirection.y = 0f;
+
+            return moveDirection.sqrMagnitude > 0.001f &&
+                Vector3.Dot(moveDirection.normalized, transform.forward) >= autoStepForwardInputThreshold;
+        }
+
+        void HandleAutomaticParkourAction(ObstacleHitData hitData)
+        {
+            if (InAction || !hitData.forwardHitFound || !hitData.heightHitFound || !hitData.hasSpace ||
+                Vector3.Angle(Vector3.up, hitData.forwardHit.normal) <= 45f ||
+                Vector3.Angle(Vector3.up, hitData.heightHit.normal) > 45f)
+                return;
+
+            foreach (var action in parkourActions)
+            {
+                if (!action.AutoTriggerOnForwardInput || !action.CheckIfPossible(hitData, transform))
+                    continue;
+
+                if (animator.GetFloat("moveAmount") < action.movementThreshold)
+                    continue;
+
+                StartCoroutine(DoParkourAction(action));
+                return;
             }
         }
 

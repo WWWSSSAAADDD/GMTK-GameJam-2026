@@ -10,12 +10,20 @@ namespace CountdownTraps
         [SerializeField] private Vector3 moveOffset = new Vector3(0f, 0f, 8f);
         [SerializeField, Min(0.05f)] private float moveDuration = 0.3f;
 
+        [Header("Trigger")]
+        [SerializeField] private bool triggerOnce = true;
+        [SerializeField, Min(0f)] private float repeatResetDelay = 2f;
+
         [Header("Detection Zone")]
         [SerializeField] private BoxCollider detectionZone;
         [SerializeField] private Vector3 detectionCenter;
         [SerializeField] private Vector3 detectionSize = new Vector3(1f, 2f, 2f);
 
         private bool triggered;
+        private bool playerInside;
+        private Vector3 initialPosition;
+        private Coroutine moveRoutine;
+        private Coroutine resetRoutine;
 
         public BoxCollider DetectionZone => detectionZone;
 
@@ -32,6 +40,7 @@ namespace CountdownTraps
 
         private void Awake()
         {
+            initialPosition = transform.position;
             ApplyDetectionZoneSettings();
         }
 
@@ -42,13 +51,34 @@ namespace CountdownTraps
 
         private void OnTriggerEnter(Collider other)
         {
-            if (triggered || !IsPlayer(other))
+            if (!IsPlayer(other))
+            {
+                return;
+            }
+
+            playerInside = true;
+            CancelPendingReset();
+            if (triggered)
             {
                 return;
             }
 
             triggered = true;
-            StartCoroutine(MovePlatform());
+            moveRoutine = StartCoroutine(MovePlatform());
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (!IsPlayer(other))
+            {
+                return;
+            }
+
+            playerInside = false;
+            if (!triggerOnce && triggered && resetRoutine == null)
+            {
+                resetRoutine = StartCoroutine(ResetAfterDelay());
+            }
         }
 
         private IEnumerator MovePlatform()
@@ -65,6 +95,35 @@ namespace CountdownTraps
             }
 
             transform.position = destination;
+            moveRoutine = null;
+        }
+
+        private IEnumerator ResetAfterDelay()
+        {
+            yield return new WaitForSeconds(repeatResetDelay);
+
+            if (!playerInside)
+            {
+                if (moveRoutine != null)
+                {
+                    StopCoroutine(moveRoutine);
+                    moveRoutine = null;
+                }
+
+                transform.position = initialPosition;
+                triggered = false;
+            }
+
+            resetRoutine = null;
+        }
+
+        private void CancelPendingReset()
+        {
+            if (resetRoutine != null)
+            {
+                StopCoroutine(resetRoutine);
+                resetRoutine = null;
+            }
         }
 
         private void ApplyDetectionZoneSettings()
