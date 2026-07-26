@@ -103,13 +103,13 @@ TextureImporter:
       name: pause-container-extra-large_0
       rect:
         serializedVersion: 2
-        x: 21
-        y: 17
-        width: 2214
-        height: 990
+        x: 110
+        y: 104
+        width: 2034
+        height: 811
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 30, y: 30, z: 30, w: 30}
       outline: []
       physicsShape: []
       tessellationDetail: -1

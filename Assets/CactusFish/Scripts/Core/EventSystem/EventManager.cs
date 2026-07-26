@@ -25,7 +25,7 @@ public static class EventManager
         }
     }
 
-    public static void Unscribe<T>(Action action) where T : IEvent
+    public static void Unscribe<T>(Action<T> action) where T : IEvent
     {
         lock (_lock)
         {

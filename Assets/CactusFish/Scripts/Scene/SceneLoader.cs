@@ -57,4 +57,10 @@ public class SceneLoader : MonoBehaviour
     {
         return SceneManager.GetActiveScene().name;
     }
+
+    public void ReloadScene(System.Action onComplete = null)
+    {
+        string current = GetCurrentSceneName();
+        LoadAsync(current, onComplete);
+    }
 }

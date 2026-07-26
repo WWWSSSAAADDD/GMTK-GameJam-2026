@@ -16,6 +16,9 @@ public class GameStart : IEvent { }
 
 public class GameOver : IEvent { }
 
+/// <summary>游戏通关事件</summary>
+public class VictoryEvent : IEvent { }
+
 public class GameRestart : IEvent { }
 public class SceneLoadProgressEvent : IEvent
 {
@@ -25,3 +28,5 @@ public class SceneLoadCompleteEvent : IEvent
 {
     public string SceneName;
 }
+
+public class TimeUpEvent : IEvent { }

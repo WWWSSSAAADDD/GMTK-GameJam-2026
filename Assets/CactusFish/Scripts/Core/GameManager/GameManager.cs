@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class GameManager : MonoBehaviour
     public AudioManager Audio { get; private set; }
     public SceneLoader Scene { get; private set; }
 
+    public EventSystem eventSystem { get; private set; }
+
     private void Awake()
     {
         if (Instance == null)
@@ -19,6 +22,8 @@ public class GameManager : MonoBehaviour
             UI = GetOrCreate<UIManager>();
             Audio = GetOrCreate<AudioManager>();
             Scene = GetOrCreate<SceneLoader>();
+            eventSystem = GetOrCreate<EventSystem>();
+            Audio.PlayBGM("HJM");
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -63,6 +68,13 @@ public class GameManager : MonoBehaviour
                 {
                     EventManager.Publish(new GameStart());
                 }
+                break;
+            case GameState.Victory:
+                Time.timeScale = 1f;
+                EventManager.Publish(new VictoryEvent());
+                break;
+            case GameState.GameOver:
+                EventManager.Publish(new GameOver());
                 break;
         }
         Debug.Log($"[GameManager] 状态切换: {oldState} → {newState}");

@@ -5,5 +5,6 @@ public enum GameState
     MainMenu,   // 主菜单
     Playing,    // 游戏中
     Paused,     // 暂停
-    GameOver    // 游戏结束
+    GameOver,   // 游戏结束
+    Victory     // 通关
 }

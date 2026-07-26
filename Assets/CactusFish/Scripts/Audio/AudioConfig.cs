@@ -49,6 +49,7 @@ public class AudioConfig : ScriptableObject
     }
 }
 
+[System.Serializable]
 public struct AudioEnTry
 {
     public string name;
