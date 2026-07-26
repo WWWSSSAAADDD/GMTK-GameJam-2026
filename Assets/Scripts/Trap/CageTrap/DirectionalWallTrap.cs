@@ -19,6 +19,9 @@ namespace CountdownTraps
         [Header("Trigger")]
         [SerializeField] private bool triggerOnce;
 
+        [Header("Audio")]
+        [SerializeField] private TrapTriggerAudio triggerAudio = new TrapTriggerAudio();
+
         [Header("Reset")]
         [SerializeField, Min(0f)] private float resetDelay = 2f;
 
@@ -131,25 +134,35 @@ namespace CountdownTraps
                 return;
             }
 
+            bool wallShown = false;
             if (highestDot == forwardDot && !forwardWallShown)
             {
                 forwardWallShown = true;
                 SetActive(forwardWall, true);
+                wallShown = true;
             }
             else if (highestDot == rightDot && !rightWallShown)
             {
                 rightWallShown = true;
                 SetActive(rightWall, true);
+                wallShown = true;
             }
             else if (highestDot == backDot && !backWallShown)
             {
                 backWallShown = true;
                 SetActive(backWall, true);
+                wallShown = true;
             }
             else if (highestDot == leftDot && !leftWallShown)
             {
                 leftWallShown = true;
                 SetActive(leftWall, true);
+                wallShown = true;
+            }
+
+            if (wallShown)
+            {
+                triggerAudio.Play(GetComponent<AudioSource>());
             }
 
             if (forwardWallShown && rightWallShown && backWallShown && leftWallShown)
