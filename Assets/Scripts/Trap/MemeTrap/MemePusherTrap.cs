@@ -11,12 +11,20 @@ namespace CountdownTraps
         [SerializeField, Min(0.1f)] private float memeMoveSpeed = 12f;
         [SerializeField, Min(0.1f)] private float memeTravelDistance = 10f;
 
+        [Header("Trigger")]
+        [SerializeField] private bool triggerOnce = true;
+        [SerializeField, Min(0f)] private float repeatResetDelay = 2f;
+
         [Header("Detection Zone")]
         [SerializeField] private BoxCollider detectionZone;
         [SerializeField] private Vector3 detectionCenter;
         [SerializeField] private Vector3 detectionSize = new Vector3(1f, 2f, 2f);
 
         private bool triggered;
+        private bool playerInside;
+        private Vector3 memeStartPosition;
+        private Coroutine pushRoutine;
+        private Coroutine resetRoutine;
 
         public BoxCollider DetectionZone => detectionZone;
 
@@ -31,6 +39,11 @@ namespace CountdownTraps
         {
             ApplyDetectionZoneSettings();
 
+            if (meme != null)
+            {
+                memeStartPosition = meme.transform.position;
+            }
+
             if (Application.isPlaying && meme != null)
             {
                 meme.SetActive(false);
@@ -44,19 +57,41 @@ namespace CountdownTraps
 
         private void OnTriggerEnter(Collider other)
         {
-            if (triggered || !TryGetPlayerController(other, out CharacterController playerController))
+            if (!TryGetPlayerController(other, out CharacterController playerController))
+            {
+                return;
+            }
+
+            playerInside = true;
+            CancelPendingReset();
+            if (triggered)
             {
                 return;
             }
 
             triggered = true;
-            StartCoroutine(PushPlayer(playerController));
+            pushRoutine = StartCoroutine(PushPlayer(playerController));
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (!TryGetPlayerController(other, out _))
+            {
+                return;
+            }
+
+            playerInside = false;
+            if (!triggerOnce && triggered && resetRoutine == null)
+            {
+                resetRoutine = StartCoroutine(ResetAfterDelay());
+            }
         }
 
         private IEnumerator PushPlayer(CharacterController playerController)
         {
             if (meme == null)
             {
+                pushRoutine = null;
                 yield break;
             }
 
@@ -80,6 +115,41 @@ namespace CountdownTraps
                 }
 
                 yield return null;
+            }
+
+            pushRoutine = null;
+        }
+
+        private IEnumerator ResetAfterDelay()
+        {
+            yield return new WaitForSeconds(repeatResetDelay);
+
+            if (!playerInside)
+            {
+                if (pushRoutine != null)
+                {
+                    StopCoroutine(pushRoutine);
+                    pushRoutine = null;
+                }
+
+                if (meme != null)
+                {
+                    meme.transform.position = memeStartPosition;
+                    meme.SetActive(false);
+                }
+
+                triggered = false;
+            }
+
+            resetRoutine = null;
+        }
+
+        private void CancelPendingReset()
+        {
+            if (resetRoutine != null)
+            {
+                StopCoroutine(resetRoutine);
+                resetRoutine = null;
             }
         }
 

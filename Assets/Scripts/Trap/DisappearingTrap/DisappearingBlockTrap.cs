@@ -3,36 +3,48 @@ using UnityEngine;
 
 namespace CountdownTraps
 {
-    [RequireComponent(typeof(Collider))]
-    public sealed class CageDropTrap : MonoBehaviour
+    [RequireComponent(typeof(BoxCollider))]
+    public sealed class DisappearingBlockTrap : MonoBehaviour
     {
-        [SerializeField] private GameObject floorToRemove;
-        [SerializeField] private GameObject cageWest;
-        [SerializeField] private GameObject cageEast;
-        [SerializeField] private GameObject cageSouth;
-        [SerializeField] private GameObject cageNorth;
-        [SerializeField] private GameObject cageRoof;
-        [SerializeField, Min(0f)] private float dropDelay = 0.25f;
+        [Header("Disappearing Block")]
+        [SerializeField] private GameObject disappearingBlock;
+        [SerializeField, Min(0f)] private float disappearDelay = 0.15f;
 
         [Header("Trigger")]
         [SerializeField] private bool triggerOnce = true;
         [SerializeField, Min(0f)] private float repeatResetDelay = 2f;
 
+        [Header("Detection Zone")]
+        [SerializeField] private BoxCollider detectionZone;
+        [SerializeField] private Vector3 detectionCenter;
+        [SerializeField] private Vector3 detectionSize = new Vector3(3f, 2f, 3f);
+
         private bool triggered;
         private bool playerInside;
-        private bool floorRemoved;
+        private bool blockHidden;
         private Coroutine resetRoutine;
-
-        private void Awake()
-        {
-            SetCageActive(false);
-            SetActive(floorToRemove, true);
-            floorRemoved = false;
-        }
 
         private void Reset()
         {
-            GetComponent<Collider>().isTrigger = true;
+            detectionZone = GetComponent<BoxCollider>();
+            ApplyDetectionZoneSettings();
+        }
+
+        private void Awake()
+        {
+            ApplyDetectionZoneSettings();
+
+            if (disappearingBlock != null)
+            {
+                disappearingBlock.SetActive(true);
+            }
+
+            blockHidden = false;
+        }
+
+        private void OnValidate()
+        {
+            ApplyDetectionZoneSettings();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -50,8 +62,8 @@ namespace CountdownTraps
             }
 
             triggered = true;
-            SetCageActive(true);
-            StartCoroutine(RemoveFloor());
+            blockHidden = false;
+            StartCoroutine(DisappearBlock());
         }
 
         private void OnTriggerExit(Collider other)
@@ -68,21 +80,24 @@ namespace CountdownTraps
             }
         }
 
-        private IEnumerator RemoveFloor()
+        private IEnumerator DisappearBlock()
         {
-            yield return new WaitForSeconds(dropDelay);
-
-            if (floorToRemove != null)
+            if (disappearDelay > 0f)
             {
-                floorToRemove.SetActive(false);
+                yield return new WaitForSeconds(disappearDelay);
             }
 
-            floorRemoved = true;
+            if (disappearingBlock != null)
+            {
+                disappearingBlock.SetActive(false);
+            }
+
+            blockHidden = true;
         }
 
         private IEnumerator ResetAfterPlayerLeaves()
         {
-            while (!floorRemoved || playerInside)
+            while (!blockHidden || playerInside)
             {
                 yield return null;
             }
@@ -91,9 +106,12 @@ namespace CountdownTraps
 
             if (!playerInside)
             {
-                SetCageActive(false);
-                SetActive(floorToRemove, true);
-                floorRemoved = false;
+                if (disappearingBlock != null)
+                {
+                    disappearingBlock.SetActive(true);
+                }
+
+                blockHidden = false;
                 triggered = false;
             }
 
@@ -109,21 +127,16 @@ namespace CountdownTraps
             }
         }
 
-        private void SetCageActive(bool active)
+        private void ApplyDetectionZoneSettings()
         {
-            SetActive(cageWest, active);
-            SetActive(cageEast, active);
-            SetActive(cageSouth, active);
-            SetActive(cageNorth, active);
-            SetActive(cageRoof, active);
-        }
-
-        private static void SetActive(GameObject gameObject, bool active)
-        {
-            if (gameObject != null)
+            if (detectionZone == null)
             {
-                gameObject.SetActive(active);
+                return;
             }
+
+            detectionZone.isTrigger = true;
+            detectionZone.center = detectionCenter;
+            detectionZone.size = detectionSize;
         }
 
         private static bool IsPlayer(Component other)

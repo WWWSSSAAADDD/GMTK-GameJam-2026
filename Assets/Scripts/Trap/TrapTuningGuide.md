@@ -1,55 +1,47 @@
 # Countdown Trap 调节速查
 
-测试白模位置：`DemoScene/Countdown Trap Test Arena`。
-红色检测范围由 `TrapDetectionZoneGizmo` 绘制；在 Scene 视图右上角开启 Gizmos 即可查看。
+测试白模：`DemoScene/Countdown Trap Test Arena`。在 Scene 视图右上角开启 Gizmos，可看到红色检测范围。
 
 ## 通用
-
-1. 每个 Trap 根物体包含机关与检测范围；Trap 3 的底板和四面墙都是其子物体。
-2. 在 Inspector 选中 Trap 根物体后调节对应脚本的字段。
-3. 所有 Trap 在一次 Play 中只触发一次；停止再开始 Play 即可重置。
-4. 调整检测范围后，确认红框覆盖玩家正常会走到的位置，同时保留可躲避的边缘。
-5. 机关 Collider 使用 `Trap` Layer，并应用到所有子物体；攀爬扫描不包含此 Layer，但物理碰撞仍有效。
-6. Trigger Collider 只检测不阻挡；平台、Meme 与墙使用非 Trigger Collider 来承重、推人或挡路。
-7. Player 的 `LocomotionController` 与 `FootStepEffects` Ground Layer 必须包含 `Default | Trap`，不要把 `Trap` 加入攀爬扫描。
+1. 每个 Trap 根物体包含触发区和机关内容；在根物体 Inspector 调节脚本字段。
+2. `Detection Center` / `Detection Size` 决定红框；边缘应留出可绕开的空间。
+3. `Trigger Once`：开启时本局只触发一次；关闭时角色离开红框后，机关等待 `Repeat Reset Delay` 恢复并可再次触发。Trap 3 用 `Reset Delay`，默认可重复。
+4. 机关与 Trigger 使用 `Trap` Layer；Trigger 仅检测，平台、Meme、墙和方块使用非 Trigger Collider。
+5. `Trap` 不会被攀爬扫描识别，但仍会物理碰撞；Player Ground Layer 保持 `Default | Trap`。
 
 ## Trap 1 - Moving Platform Trap
-
-根物体：`Trap 1 - Moving Platform Trap`（移动平台与检测范围在同一物体）。
-
-1. `Move Offset`：平台触发后移动的世界坐标位移；改方向或距离。
-2. `Move Duration`：完成移动的秒数；数值越小，平台移开得越突然。
-3. `Detection Center`：检测框相对平台中心的偏移。
-4. `Detection Size`：检测框长宽高；红框会实时同步。
-5. `Trap 1 - Moving Platform Start` 只是静态承重白模，不挂陷阱脚本。
+根物体：`Trap 1 - Moving Platform Trap`。
+1. `Move Offset`：移动方向和距离；`Move Duration`：耗时，越小越突然。
+2. `Detection Center` / `Detection Size`：检测框位置与大小。
+3. `Trap 1 - Moving Platform Start` 是独立的静态承重白模。
 
 ## Trap 2 - Meme Pusher Trap
-
-根物体：`Trap 2 - Meme Pusher Trap`（检测范围与大 Meme 在同一 Trap 中）。
-
-1. `Meme`：大 Meme 根物体引用；替换模型后，将新模型根物体拖入此字段。
-2. 旋转 Meme 的 Transform 即可改变推进方向；它始终沿自身 `Forward` 移动。
-3. `Meme Move Speed`：大 Meme 的移动速度。
-4. `Meme Travel Distance`：大 Meme 的总移动距离。
-5. 新 Meme 需带一个或多个非 Trigger Collider，接触到角色时才会将角色推走。
-6. 编辑器中 Meme 默认显示；进入 Play 后隐藏，角色进入检测范围时出现。
-7. `Trap 2 - Static Platform` 是场景静态平台，不属于 Trap 2 根物体。
+根物体：`Trap 2 - Meme Pusher Trap`。
+1. `Meme`：大 Meme 根物体；替换模型后重新拖入，模型必须带非 Trigger Collider。
+2. Meme 沿自身 `Forward` 移动；旋转 Transform 可改方向。
+3. `Meme Move Speed` / `Meme Travel Distance`：速度和总移动距离。
+4. 编辑器中 Meme 可见，Play 开始隐藏，进入红框后出现并接触推人。
 
 ## Trap 3 - Directional Wall Trap
+根物体：`Trap 3 - Directional Wall Trap`。
+1. 四个 Wall 引用对应四面墙；`Floor Platform` 引用根物体下的 `Drop Floor`。
+2. 红框内向某方向输入，对应墙出现；四墙出现后底板消失。
+3. 掉落并离开红框后，等待 `Reset Delay` 恢复；当前为 `2` 秒。
+4. `Input Threshold` 越低越灵敏，`Direction Dot Threshold` 越高方向越严格；四个 `Movement Direction` 定义墙方向。
+5. 编辑器中墙和底板可见；Play 开始仅隐藏墙，底板保留。
 
-根物体：`Trap 3 - Directional Wall Trap`（检测范围、四面墙和底板都在同一 Trap 中）。
+## Trap 4 - Disappearing Block Trap
+根物体：`Trap 4 - Disappearing Block Trap`，子物体：`Trap 4 - Disappearing Block`。
+1. `Disappearing Block`：要消失的方块或模型，可替换为任意带 Collider 的物体。
+2. `Disappear Delay`：进入红框到消失的等待秒数；当前为 `0.15`。
+3. 编辑器与 Play 开始时方块可见，触发后失活并让玩家掉落。
 
-1. 根物体的 `Box Collider` 就是检测范围；用其 `Center` 与 `Size` 调整红框。
-2. `Forward/Right/Back/Left Wall` 分别引用四面墙；墙体为根物体的子物体。
-3. `Floor Platform` 引用 `Trap 3 - Drop Floor`；底板必须是根物体的子物体且使用非 Trigger Collider。
-4. 角色在红框内输入某方向时，对应方向的墙立即出现；四面墙都出现后，底板会消失。
-5. 角色掉落并离开红框后，等待 `Reset Delay` 再恢复底板、隐藏四面墙并允许再次触发；当前为 `2` 秒。
-6. `Input Threshold`：输入灵敏度，越低越容易触发；测试场景当前为 `0.05`。
-7. `Direction Dot Threshold`：方向判定精度，越高越要求输入方向准确；当前为 `0.7`。
-8. 四个 `Movement Direction`：设置各墙对应的世界方向；当前前/右/后/左为 `+X/-Z/-X/+Z`。
-9. 调整墙体位置和缩放时，让它们贴住红框四周，避免覆盖检测范围内部。
-10. 编辑器中四面墙和底板默认显示；进入 Play 后四面墙隐藏，底板保留。
+## Trap 5 - Appearing Obstacle Trap
+根物体：`Trap 5 - Appearing Obstacle Trap`，子物体：`Trap 5 - Appearing Obstacle`。
+1. `Appearing Obstacle`：要显形的墙或模型，须带非 Trigger Collider。
+2. `Appear Delay`：进入红框到出现的等待秒数；`0` 为立刻出现。
+3. 编辑器中障碍可见；Play 开始隐藏，进入红框后显形并阻挡前进。
+4. `Trap 5 - Static Walkway` 是独立静态承重白模，不属于 Trap 根物体。
 
 ## 测试
-
-进入 Play 后按正常路线走入红框，确认陷阱能触发且玩家可从检测范围边缘绕开。
+进入 Play 后按正常路线走进红框，确认机关会触发，同时可从检测范围边缘绕开。
