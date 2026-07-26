@@ -1,24 +1,25 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using TMPro;
-
-
-
 
 public class ResultPanel : UIBase
 {
     [Header("文本")]
     public TMP_Text titleText;
     public TMP_Text scoreText;
-    public GameObject scoreGroup;   // 分数区域（暂停时隐藏）
+    public GameObject scoreGroup;
 
     [Header("按钮")]
-    public Button settingsButton;   // 设置
-    public Button restartButton;    // 重玩
-    public Button homeButton;       // 返回主页
-    public Button quitButton;       // 退出页面
+    public Button settingsButton;
+    public Button restartButton;
+    public Button homeButton;
+    public Button quitButton;
+    public TMP_Text homeButtonText;     // 按钮上的文字，Victory时自动切"下一关"
 
+    [Header("下一关")]
+    public string nextLevelName = "Level2";
+
+    private GameState _currentState;
 
     protected override void OnOpen()
     {
@@ -34,36 +35,43 @@ public class ResultPanel : UIBase
 
     public void Show(GameState state, int score = 0)
     {
+        _currentState = state;
+
         switch (state)
         {
             case GameState.Paused:
                 titleText.text = "Pause";
                 if (scoreGroup != null) scoreGroup.SetActive(false);
+                if (homeButtonText != null) homeButtonText.text = "返回主页";
                 break;
 
             case GameState.GameOver:
                 titleText.text = "Game Over";
                 if (scoreGroup != null) scoreGroup.SetActive(true);
                 if (scoreText != null) scoreText.text = score.ToString();
+                if (homeButtonText != null) homeButtonText.text = "返回主页";
                 break;
 
             case GameState.Victory:
                 titleText.text = "Level Cleared";
                 if (scoreGroup != null) scoreGroup.SetActive(true);
                 if (scoreText != null) scoreText.text = score.ToString();
+                if (homeButtonText != null) homeButtonText.text = "下一关";
                 break;
         }
     }
 
-    // ========== 按钮点击事件（Inspector里绑定） ==========
+    // ========== 按钮点击事件 ==========
 
-    /// <summary>设置按钮</summary>
     public void OnSettingsClicked()
     {
         GameManager.Instance.UI.Open("Setting");
+        // 确保设置页在最上层
+        var settings = GameManager.Instance.UI.Get<SettingsPanel>("Setting");
+        if (settings != null)
+            settings.transform.SetAsLastSibling();
     }
 
-    /// <summary>重玩按钮</summary>
     public void OnRestartClicked()
     {
         Time.timeScale = 1f;
@@ -71,15 +79,17 @@ public class ResultPanel : UIBase
         GameManager.Instance.Scene.ReloadScene();
     }
 
-    /// <summary>返回主页按钮</summary>
     public void OnHomeClicked()
     {
         Time.timeScale = 1f;
         GameManager.Instance.UI.ClearAll();
-        GameManager.Instance.Scene.LoadAsync("Home");
+
+        if (_currentState == GameState.Victory)
+            GameManager.Instance.Scene.ReloadScene();  // TODO: 第二关做好后改成 LoadAsync(nextLevelName)
+        else
+            GameManager.Instance.Scene.LoadAsync("Home");
     }
 
-    /// <summary>退出页面按钮</summary>
     public void OnQuitClicked()
     {
         if (GameManager.Instance.State == GameState.Paused)
@@ -87,5 +97,3 @@ public class ResultPanel : UIBase
         GameManager.Instance.UI.Close(UIName);
     }
 }
-
-
