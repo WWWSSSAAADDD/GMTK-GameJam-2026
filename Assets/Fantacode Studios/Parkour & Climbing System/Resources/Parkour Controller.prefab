@@ -23,6 +23,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1290989258551716678}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 44.696, y: 0, z: -33.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,7 +33,6 @@ Transform:
   - {fileID: 7150212483928893031}
   - {fileID: 3464633716192524340}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1340401791785946192
 GameObject:
@@ -59,13 +59,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1340401791785946192}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3464633716192524340}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8782347383577311042
 MonoBehaviour:
@@ -136,7 +136,6 @@ RectTransform:
   - {fileID: 9215384276421595847}
   - {fileID: 4172694531246117494}
   m_Father: {fileID: 3464633716192524340}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -176,7 +175,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8499630450310088042}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.91249996, y: 0.082}
   m_AnchorMax: {x: 0.975, y: 0.19310465}
@@ -310,7 +308,6 @@ RectTransform:
   m_Children:
   - {fileID: 3686451220421096598}
   m_Father: {fileID: 8499630450310088042}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.0765, y: 0.09977814}
   m_AnchorMax: {x: 0.20150001, y: 0.32210842}
@@ -378,6 +375,7 @@ GameObject:
   - component: {fileID: 300337345104788593}
   - component: {fileID: 3873020050451671788}
   - component: {fileID: 5521839913132247227}
+  - component: {fileID: 9116390345654707962}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -392,13 +390,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5266010699608454798}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1495303239458321982}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!114 &6529569176085886271
 MonoBehaviour:
@@ -417,6 +415,7 @@ MonoBehaviour:
   - {fileID: 2921365508235104115}
   - {fileID: 713672655744766605}
   <CurrentSystemState>k__BackingField: 0
+  _editorSearchString: 
 --- !u!114 &7068675111878745705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -465,8 +464,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
-  isGrounded: 0
-  ySpeed: 0
 --- !u!114 &7961923618146007863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,15 +476,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 790464fff7e4b964994dec7090824467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <GrapplingLedgeLayer>k__BackingField:
-    serializedVersion: 2
-    m_Bits: 1
   <MinJumpDistance>k__BackingField: 0.8
   jumpToTheClosestLedge: 0
   alwaysUsePlayerForward: 0
-  <SwingLedgeLayer>k__BackingField:
-    serializedVersion: 2
-    m_Bits: 1
   heightRayLength: 4
   obstacleCheckRange: 0.7
   ledgeHeightThreshold: 1
@@ -564,6 +555,9 @@ MonoBehaviour:
   quickSwitchItemKey: 301
   selectKey: 101
   backKey: 27
+  crouchKey: 99
+  cycleToPreviousKey: 51
+  cycleToNextKey: 52
   jumpButton: 
   dropButton: 
   moveTypeButton: 
@@ -572,6 +566,9 @@ MonoBehaviour:
   quickSwitchItemButton: 
   selectButton: 
   backButton: 
+  crouchButton: 
+  cycleToPreviousItemButton: 
+  cycleToNextItemButton: 
 --- !u!114 &655159730603628159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -794,6 +791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <MaxHealth>k__BackingField: 100
+  canBeDamagedBy: 0
 --- !u!114 &5521839913132247227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -811,6 +809,19 @@ MonoBehaviour:
   hotspotLayer:
     serializedVersion: 2
     m_Bits: 1
+--- !u!114 &9116390345654707962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5266010699608454798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a978c4e7a88e5df47ab760066ad4fd5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boneMappings: []
 --- !u!1 &5647532171307697040
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,7 +854,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8499630450310088042}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.26784545, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -934,7 +944,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4193033936295573568}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.78625005, y: 0.19744186}
   m_AnchorMax: {x: 0.84875, y: 0.3087791}
@@ -1069,7 +1078,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4172694531246117494}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.3, y: 0.3}
   m_AnchorMax: {x: 0.70000005, y: 0.70000005}
@@ -1226,7 +1234,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8499630450310088042}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.8262501, y: 0.082}
   m_AnchorMax: {x: 0.88875, y: 0.19310465}
@@ -1361,7 +1368,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8499630450310088042}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.86875004, y: 0.20222093}
   m_AnchorMax: {x: 0.93125, y: 0.31322095}
@@ -1498,7 +1504,6 @@ RectTransform:
   - {fileID: 309371237824605362}
   - {fileID: 4193033936295573568}
   m_Father: {fileID: 1495303239458321982}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1598,7 +1603,6 @@ RectTransform:
   m_Children:
   - {fileID: 2482000770212111887}
   m_Father: {fileID: 3464633716192524340}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1631,13 +1635,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9089445212285269619}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1495303239458321982}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &275330989932626333
 Camera:
@@ -1711,28 +1715,47 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followTarget: {fileID: 5845295887480492975}
-  defaultSettings:
-    followTarget: {fileID: 0}
-    distance: 2.5
-    framingOffset: {x: 0, y: 1.5, z: 0}
-    followSmoothTime: 0.2
-    localRotationOffset: {x: 0, y: 0}
-    sensitivity: 0.6
-    minVerticalAngle: -45
-    maxVerticalAngle: 70
-    invertX: 0
-    invertY: 1
-    enableCameraCollisions: 1
-    minDistanceFromTarget: 0.2
-    serialized: 1
-  advancedCameraRotation: 1
+  CameraType: 1
+  firstPersonCamera:
+    defaultSettings:
+      distance: 2.5
+      framingOffset: {x: 0, y: 1.5, z: 0}
+      followSmoothTime: 0
+      localRotationOffset: {x: 0, y: 0}
+      sensitivity: 0.6
+      minVerticalAngle: -45
+      maxVerticalAngle: 70
+      invertX: 0
+      invertY: 1
+      enableCameraCollisions: 1
+      minDistanceFromTarget: 0
+      overridedFollowTarget: {fileID: 0}
+      serialized: 1
+    overrideCameraSettings: []
+    distanceSmoothTime: 0
+    framingSmoothTime: 0
+  thirdPersonCamera:
+    defaultSettings:
+      distance: 2.5
+      framingOffset: {x: 0, y: 1.5, z: 0}
+      followSmoothTime: 0
+      localRotationOffset: {x: 0, y: 0}
+      sensitivity: 0.6
+      minVerticalAngle: -45
+      maxVerticalAngle: 70
+      invertX: 0
+      invertY: 1
+      enableCameraCollisions: 1
+      minDistanceFromTarget: 0
+      overridedFollowTarget: {fileID: 0}
+      serialized: 1
+    overrideCameraSettings: []
+    distanceSmoothTime: 0
+    framingSmoothTime: 0
+  lockCursor: 1
   collisionLayers:
     serializedVersion: 2
     m_Bits: 1
-  lockCursor: 1
-  distanceSmoothTime: 0.3
-  distanceSmoothTimeWhenOcluded: 0
-  framingSmoothTime: 0.5
   collisionPadding: 0.05
-  overrideCameraSettings: []
   nearClipPlane: 0.1
+  distanceSmoothTimeWhenOcluded: 0
