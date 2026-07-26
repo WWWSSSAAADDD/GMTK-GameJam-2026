@@ -9,7 +9,7 @@ public class UIRegister : MonoBehaviour
     {
         foreach (GameObject obj in objects)
         {
-            GameManager.Instance.UI.Register(obj.name, obj);
+            GameManager.Instance.UI.Register(obj.name, obj, UILayer.Popup);
         }
     }
 }

@@ -117,28 +117,7 @@ public class GameController : MonoBehaviour
     }
 }
 
-/// <summary>
-/// 终点触发器：玩家碰到后通知 GameController
-/// 挂到终点的物体上，勾选IsTrigger
-/// </summary>
-public class GoalTrigger : MonoBehaviour
-{
-    /// <summary>玩家到达终点时的回调（由GameController绑定）</summary>
-    public System.Action OnReachGoal;
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            OnReachGoal?.Invoke();
-        }
-    }
-}
-
-/// <summary>
-/// 出生点触发器：玩家离开后通知 GameController 开始倒计时
-/// 挂到出生点的物体上，勾选IsTrigger
-/// </summary>
 public class StartTrigger : MonoBehaviour
 {
     /// <summary>玩家离开出生点时的回调（由GameController绑定）</summary>

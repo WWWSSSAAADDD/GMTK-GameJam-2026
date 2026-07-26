@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case GameState.Victory:
-                Time.timeScale = 1f;
+                Time.timeScale = 0f;
                 EventManager.Publish(new VictoryEvent());
                 break;
             case GameState.GameOver:
