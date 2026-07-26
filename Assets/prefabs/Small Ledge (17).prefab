@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5786048961155189461}
   - component: {fileID: 9109191329054135290}
   - component: {fileID: 9100899755013370853}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Small Ledge (17)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,7 +116,7 @@ GameObject:
   m_Component:
   - component: {fileID: 595695906498806131}
   - component: {fileID: 4864287391806637212}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Climb Point 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

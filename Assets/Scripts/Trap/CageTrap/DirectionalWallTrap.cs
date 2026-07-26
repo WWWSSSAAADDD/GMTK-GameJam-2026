@@ -16,6 +16,9 @@ namespace CountdownTraps
         [Header("Floor")]
         [SerializeField] private GameObject floorPlatform;
 
+        [Header("Trigger")]
+        [SerializeField] private bool triggerOnce;
+
         [Header("Reset")]
         [SerializeField, Min(0f)] private float resetDelay = 2f;
 
@@ -63,6 +66,12 @@ namespace CountdownTraps
                 return;
             }
 
+            if (resetRoutine != null)
+            {
+                StopCoroutine(resetRoutine);
+                resetRoutine = null;
+            }
+
             playerTransform = player;
             locomotionInput = player.GetComponent<LocomotionInputManager>();
             playerInside = true;
@@ -76,7 +85,7 @@ namespace CountdownTraps
                 playerTransform = null;
                 locomotionInput = null;
 
-                if (floorDropped)
+                if (!triggerOnce && AnyWallShown() && resetRoutine == null)
                 {
                     resetRoutine = StartCoroutine(ResetAfterDelay());
                 }
@@ -153,6 +162,11 @@ namespace CountdownTraps
         {
             floorDropped = true;
             SetActive(floorPlatform, false);
+        }
+
+        private bool AnyWallShown()
+        {
+            return forwardWallShown || rightWallShown || backWallShown || leftWallShown;
         }
 
         private IEnumerator ResetAfterDelay()

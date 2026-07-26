@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1807233860022575845}
   - component: {fileID: 287866846143595463}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Climb Point 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 6455082445003636399}
   - component: {fileID: 2494221606979289322}
   - component: {fileID: 6522449823882776631}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Swingalble Ledge (4)
   m_TagString: SwingableLedge
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9023471990062890575}
   - component: {fileID: 5679335283307942280}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Climb Point 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}

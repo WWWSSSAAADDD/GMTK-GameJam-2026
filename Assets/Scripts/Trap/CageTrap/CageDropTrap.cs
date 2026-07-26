@@ -14,11 +14,20 @@ namespace CountdownTraps
         [SerializeField] private GameObject cageRoof;
         [SerializeField, Min(0f)] private float dropDelay = 0.25f;
 
+        [Header("Trigger")]
+        [SerializeField] private bool triggerOnce = true;
+        [SerializeField, Min(0f)] private float repeatResetDelay = 2f;
+
         private bool triggered;
+        private bool playerInside;
+        private bool floorRemoved;
+        private Coroutine resetRoutine;
 
         private void Awake()
         {
             SetCageActive(false);
+            SetActive(floorToRemove, true);
+            floorRemoved = false;
         }
 
         private void Reset()
@@ -28,7 +37,14 @@ namespace CountdownTraps
 
         private void OnTriggerEnter(Collider other)
         {
-            if (triggered || !IsPlayer(other))
+            if (!IsPlayer(other))
+            {
+                return;
+            }
+
+            playerInside = true;
+            CancelPendingReset();
+            if (triggered)
             {
                 return;
             }
@@ -38,6 +54,20 @@ namespace CountdownTraps
             StartCoroutine(RemoveFloor());
         }
 
+        private void OnTriggerExit(Collider other)
+        {
+            if (!IsPlayer(other))
+            {
+                return;
+            }
+
+            playerInside = false;
+            if (!triggerOnce && triggered && resetRoutine == null)
+            {
+                resetRoutine = StartCoroutine(ResetAfterPlayerLeaves());
+            }
+        }
+
         private IEnumerator RemoveFloor()
         {
             yield return new WaitForSeconds(dropDelay);
@@ -45,6 +75,37 @@ namespace CountdownTraps
             if (floorToRemove != null)
             {
                 floorToRemove.SetActive(false);
+            }
+
+            floorRemoved = true;
+        }
+
+        private IEnumerator ResetAfterPlayerLeaves()
+        {
+            while (!floorRemoved || playerInside)
+            {
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(repeatResetDelay);
+
+            if (!playerInside)
+            {
+                SetCageActive(false);
+                SetActive(floorToRemove, true);
+                floorRemoved = false;
+                triggered = false;
+            }
+
+            resetRoutine = null;
+        }
+
+        private void CancelPendingReset()
+        {
+            if (resetRoutine != null)
+            {
+                StopCoroutine(resetRoutine);
+                resetRoutine = null;
             }
         }
 

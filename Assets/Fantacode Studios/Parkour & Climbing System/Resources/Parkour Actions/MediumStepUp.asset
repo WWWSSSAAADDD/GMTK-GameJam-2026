@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MediumStepUp
   m_EditorClassIdentifier: 
   animName: MediumStepUp
+  autoTriggerOnForwardInput: 1
   minHeight: 0.3
   maxHeight: 0.8
   useHands: 0
